@@ -169,7 +169,6 @@ void grow_snake(GameState *gs) {
     IVector2 newTail = gs->snake.head;
     newTail.x -= gs->snake.direction.x;
     newTail.y -= gs->snake.direction.y;
-    // wrap around if needed...
     da_append(&gs->snake.body, newTail);
     gs->grid[newTail.y][newTail.x].has_body = true;
   } else {
@@ -274,6 +273,7 @@ void move_snake(GameState *gs, Direction dir, float *time_since_last_move) {
     // 3) Move head
     gs->snake.head.x += gs->snake.direction.x;
     gs->snake.head.y += gs->snake.direction.y;
+
     // Wrap around
     if (gs->snake.head.x < 0)
       gs->snake.head.x = GRID_WIDTH - 1;
@@ -318,15 +318,13 @@ void move_snake(GameState *gs, Direction dir, float *time_since_last_move) {
 // Draw the board (apples, snake head, snake body)
 // -----------------------------------------------------------
 void draw_board(GameState *gs) {
-  const Color SNAKE_HEAD_COLOR =
-      (Color){140, 37, 154, 255};                         // Tomato red for head
-  const Color SNAKE_HEAD_OUTLINE = (Color){0, 0, 0, 255}; // Crimson outline
+  const Color SNAKE_HEAD_COLOR = (Color){140, 37, 154, 255};
+  const Color SNAKE_HEAD_OUTLINE = (Color){0, 0, 0, 255};
 
-  const Color SNAKE_BODY_COLOR_INNER = (Color){90, 127, 255, 255}; // Soft blue
-  const Color SNAKE_BODY_COLOR_OUTER =
-      (Color){0, 0, 0, 255}; // Darker blue outline
-  const Color APPLE_COLOR_INNER = (Color){231, 76, 60, 255}; // Vibrant red
-  const Color APPLE_COLOR_OUTER = (Color){0, 0, 0, 255};     // Dark red outline
+  const Color SNAKE_BODY_COLOR_INNER = (Color){90, 127, 255, 255};
+  const Color SNAKE_BODY_COLOR_OUTER = (Color){0, 0, 0, 255};
+  const Color APPLE_COLOR_INNER = (Color){231, 76, 60, 255};
+  const Color APPLE_COLOR_OUTER = (Color){0, 0, 0, 255};
 
   // Draw apples
   for (int i = 0; i < gs->apples.count; i++) {
@@ -338,7 +336,7 @@ void draw_board(GameState *gs) {
     DrawCircle(px_center, py_center, 10.0f, APPLE_COLOR_INNER);
   }
 
-  // Draw snake head (distinctly colored and slightly larger)
+  // Draw snake head
   IVector2 head = gs->snake.head;
   int sx_center = head.x * GRID_SIZE + (GRID_SIZE / 2);
   int sy_center = head.y * GRID_SIZE + (GRID_SIZE / 2);
